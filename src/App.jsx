@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useRef } from "react";
+import { Outlet } from "react-router-dom";
+import Header from "./sections/Global/Header";
+import Footer from "./sections/Global/Footer";
+import { useGetCurrentUser, useServerCheckStatus} from "./api";
+import ErrorBox from "./components/ErrorBox";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/ReactToastify.css";
+import Spinner from "./components/Spinner";
 
-function App() {
-  const [count, setCount] = useState(0)
+function App() { 
+  const toastShown = useRef(false);
+  const {
+    isError,
+    isLoading: serverLoading,
+  } = useServerCheckStatus();
+
+  const {
+    isLoading: userLoading,
+    error: userError,
+    isError: userIsError,
+  } = useGetCurrentUser();
+
+  if (serverLoading || userLoading)
+    return <Spinner/>;
+
+  if (isError) return <ErrorBox/>;
+
+  if (userIsError && userError?.error && !toastShown.current) {
+    toastShown.current = true;
+    requestAnimationFrame(() => toast.error(userError.error));
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="min-h-screen overflow-x-hidden">
+      <Header />
+      <Outlet />
+      <Footer />
+      <ToastContainer position="bottom-right" autoClose={3000} />
+    </div>
+  );
 }
 
-export default App
+export default App;

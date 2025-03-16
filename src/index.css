@@ -1,68 +1,99 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: "Jost", serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+@theme {
+  --breakpoint-sm: 320px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --color-primary: #f6f6f6;
+  --color-secondary: #FAF8F4;
+  --color-footernav: rgba(0, 0, 0, 0.6);
+  --size-footernav: 14px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.text-footernav {
+  color: var(--color-footernav);
+  font-size: var(--size-footernav);
+  width: fit-content;
+  position: relative;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.text-footernav::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: black;
+  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+  transform-origin: left;
+}
+
+.text-footernav:hover::after {
+  transform: scaleX(1);
+}
+
+.text-footernav:not(:hover)::after {
+  transform-origin: right;
+  transform: scaleX(0);
+}
+
+
+.hover-animation{
+  position: relative;
+  cursor: pointer;
+}
+
+.hover-animation::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: black;
+  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+  transform-origin: left;
+}
+
+.hover-animation:hover::before {
+  transform: scaleX(1);
+}
+
+.hover-animation:not(:hover)::before {
+  transform-origin: right;
+  transform: scaleX(0);
+}
+
+.swiper-pagination-bullet {
+  background-color: black !important;
+}
+
+
+.shopgrid-banner {
+  background-image: url("./assets/Images/shop/shop-header.webp");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #6b7280 !important;
+  font-size: 2rem !important; 
+  font-weight: light;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  color: #6b7280 !important;
+  font-size: 2rem !important;
 }
