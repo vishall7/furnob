@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: "https://furnob-backend.onrender.com",
+    baseURL: "https://furnob-backend.onrender.com/api/v1",
     headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "https://furnob-backend.onrender.com",
+        "Access-Control-Allow-Origin": "http://localhost:3000",
     },
     withCredentials: true
 });
