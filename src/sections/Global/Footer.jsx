@@ -2,6 +2,7 @@ import React from "react";
 import Text from "../../components/Text";
 import Container from "../../components/Container";
 import Seperator from "../../components/Seperator";
+import headerLogo from "../../assets/Images/furnob-logo.png"
 // icons
 import { Icon, Truck } from "lucide-react";
 import { Headset } from "lucide-react";
@@ -194,7 +195,7 @@ function Footer() {
       <Container>
         <footer className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-2 py-8 lg:py-12">
           <div className="flex flex-col lg:flex-row lg:gap-10 items-start gap-2">
-            <img src="./furnob-logo.png" alt="footer logo" className="h-auto w-36 md:w-36" />
+            <img src={headerLogo} alt="footer logo" className="h-auto w-36 md:w-36" />
             <div className="flex flex-col gap-2">
               <Text as="p" className="text-[13px]">
                 Copyright 2025 © Furnob WordPress Theme. All right reserved.
