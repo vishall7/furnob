@@ -146,6 +146,7 @@ export const getCurrentUser = async () => {
   try {
     console.log("request user");
     const response = await axiosInstance.get("/user/current");
+    console.log(response)
     return response;
   } catch (error) {
     throw error;

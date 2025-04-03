@@ -25,7 +25,7 @@ export const Stars = ({ stars }) => (
 const cardStyles = cva("flex flex-col gap-3 group/card", {
   variants: {
     size: {
-      md: "w-full h-[29rem] md:h-[29rem] lg:h-[22rem]",
+      md: "w-full h-[32rem] md:h-[29rem] lg:h-[22rem]",
       lg: "w-full md:w-[15rem] lg:w-[18.3rem] h-[26rem] lg:h-[29rem]",
     },
   },
