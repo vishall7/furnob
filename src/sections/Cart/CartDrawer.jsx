@@ -175,7 +175,7 @@ function CartDrawer() {
                 <Button
                   variant={"secondary"}
                   className={
-                    "flex w-full items-center justify-center border border-neutral-200 bg-neutral-400 py-3 text-black hover:bg-neutral-500"
+                    "flex w-full items-center justify-center border border-neutral-200 bg-neutral-400 py-3 text-black hover:bg-neutral-500 text-lg"
                   }
                   onClick={handleViewCartNavigate}
                 >

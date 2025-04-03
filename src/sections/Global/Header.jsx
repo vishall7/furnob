@@ -111,6 +111,7 @@ function Header() {
               className="h-auto w-36 md:w-36 lg:w-40"
               src={headerLogo}
               alt="logo"
+              onClick={() => navigate("/")}
             />
             <ul className="hidden items-center gap-9 lg:flex">
               <NavLink className="cursor-pointer font-[500]">Home</NavLink>
