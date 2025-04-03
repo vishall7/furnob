@@ -1,5 +1,4 @@
 import React from "react";
-import chair from "../../assets/Images/home/chair.webp";
 
 const ProductTable = ({ products }) => {
   const discountedPrice = (price, discount) =>
@@ -7,7 +6,7 @@ const ProductTable = ({ products }) => {
   const dateFormat = (date) => new Date(date).toLocaleDateString();
 
   return (
-    <div className="w-full overflow-auto max-h-[400px]">
+    <div className="max-h-[400px] w-full overflow-auto">
       <div className="w-full min-w-[600px]">
         <table className="w-full border-collapse border border-gray-300 text-left text-sm">
           <thead>
@@ -36,7 +35,7 @@ const ProductTable = ({ products }) => {
                 <td className="p-3 text-center">
                   <input type="checkbox" className="h-4 w-4 cursor-pointer" />
                 </td>
-                <td className="flex flex-col items-center gap-3 p-3 sm:flex-row">
+                <td className="relative flex flex-col items-center gap-3 p-3 sm:flex-row">                  
                   <img
                     src={product.mainImage}
                     alt={product.name}
@@ -58,7 +57,7 @@ const ProductTable = ({ products }) => {
                   <button className="w-[80%] cursor-pointer rounded border border-teal-600 px-4 py-2 text-teal-600 transition hover:bg-teal-600 hover:text-white">
                     Add to Cart
                   </button>
-                </td>                
+                </td>
               </tr>
             ))}
           </tbody>

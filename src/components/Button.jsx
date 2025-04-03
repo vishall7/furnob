@@ -3,7 +3,7 @@ import React from 'react'
 import { twMerge } from 'tailwind-merge'
 import { MoveRight } from 'lucide-react'
 
-function Button({children, className, variant, onClick, icon}) {
+function Button({children, className, variant, onClick, icon, type}) {
 
     const buttonStyles = cva('px-4 py-2 rounded-md flex items-center gap-2 transition duration-300 cursor-pointer', {
         variants: {
@@ -19,7 +19,7 @@ function Button({children, className, variant, onClick, icon}) {
     })
 
   return (
-    <button onClick={onClick} className={twMerge(buttonStyles({variant}), className)}>
+    <button type={type} onClick={onClick} className={twMerge(buttonStyles({variant}), className)}>
       {children}
       {icon && <MoveRight size={20} strokeWidth={1.5} />}
     </button>

@@ -97,3 +97,13 @@ body {
   color: #6b7280 !important;
   font-size: 2rem !important;
 }
+
+
+body {
+  overflow-y: auto;
+}
+
+body.cart-open {
+  overflow-y: hidden;
+  padding-right: 15px;
+}

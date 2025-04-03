@@ -1,9 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CircleUserRound, MapPin } from "lucide-react";
+import { useGetCurrentUser } from "../../api";
 
 function NavHeader() {
     const navigate = useNavigate();
+    const {data: user, error} = useGetCurrentUser({ifUser: true});
   return (
     <header className="hidden w-full items-center justify-between border-b border-neutral-200 px-11 py-[11px] lg:flex">
       <p className="text-[.81rem] font-medium">
@@ -21,7 +23,7 @@ function NavHeader() {
             onClick={() => navigate("/user")}
             className="cursor-pointer text-[.80rem] capitalize"
           >
-            {"My Account"}
+            {user ? user.username : "My Account"}
           </p>
         </div>
         <div className="flex items-center gap-1">

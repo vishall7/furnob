@@ -20,7 +20,7 @@ function ProductGrid() {
     (state) => state.pageIndexes[categoryKey] || 0,
   );
   
-  const { data: products, isLoading, error } = useProducts({
+  const { data: products, isLoading } = useProducts({
     categoryId: id,
     filters: { page: currentPageIndex + 1, limit: 10, ...filters[categoryKey] },
   });

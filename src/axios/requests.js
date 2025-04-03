@@ -38,8 +38,10 @@ export const fetchSingleProduct = async ({ queryKey }) => {
 export const fetchRelatedProducts = async ({ queryKey }) => {
   try {
     console.log("fetchRelatedProducts");
-    const [_key, matchCirteria] = queryKey;
-    const response = await axiosInstance.get(`/product/related/${productId}`);
+    const [_key, matchQuery] = queryKey;
+    const matchCriteria = new URLSearchParams(matchQuery).toString();
+    console.log(matchCriteria)
+    const response = await axiosInstance.get(`/product/related?${matchCriteria}`);
     return response;
   } catch (err) {
     throw err;
@@ -70,6 +72,7 @@ export const fetchCategories = async () => {
 
 export const serverHealthStatus = async () => {
   try {
+    console.log("serverHealthStatus");
     const response = await axiosInstance.get("/health");
     return response;
   } catch (error) {
@@ -148,3 +151,26 @@ export const getCurrentUser = async () => {
     throw error;
   }
 };
+
+export const sendOrderEmail = async (data) => {
+  try {
+    console.log("sendOrderEmail");
+    const response = await axiosInstance.post("/user/order", {order: data}, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const searchProducts = async ({queryKey}) => {
+  try {
+    console.log("searchProducts");
+    const [_key, query] = queryKey;
+    const response = await axiosInstance.get(`/product/search?query=${query}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

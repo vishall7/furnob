@@ -21,7 +21,6 @@ function ImageGallery({ images, discount }) {
     }
   }
 
-  console.log("image gallery rendered");
   return (
     <div className="w-full">
       <Swiper

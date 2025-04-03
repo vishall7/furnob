@@ -1,46 +1,70 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { memo, useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Container from "../../components/Container";
 import ImageGallery from "./ImageGallery";
-import { useSingleProduct } from "../../api";
-import Spinner from "../../components/Spinner";
+import { useRelatedProduct, useSingleProduct } from "../../api";
 import { Stars } from "../../components/Card";
 import Seperator from "../../components/Seperator";
 import ShareIcons from "./ShareIcons";
 import { cn } from "../../utils/cn";
 import Button from "../../components/Button";
 import { Minus, Plus } from "lucide-react";
+import ProductSkeleton from "./ProductScaleton";
+import { toast } from "react-toastify";
+import { useCartStore } from "../../store";
 
-function QuantitySelector() {
-  const [quantity, setQuantity] = useState(1);
-  const decrement = () => setQuantity((prev) => prev - 1);
-  const increment = () => setQuantity((prev) => prev + 1);
-
-  return (
-    <div className="flex w-30 items-center justify-between gap-5 rounded border border-gray-300 px-3 py-2">
-      <Minus
-        onClick={decrement}
-        size={16}
-        stroke="#000"
-        strokeWidth={2}
-        className="scale-90"
-      />
-      {quantity}{" "}
-      <Plus
-        onClick={increment}
-        size={16}
-        stroke="#000"
-        strokeWidth={2}
-        className="scale-90"
-      />
-    </div>
+const AddToCartButton = memo(({ product, discountedPrice }) => {
+  const navigate = useNavigate();
+  const isProductInCart = useCartStore((state) =>
+    state.cart.some((item) => item._id === product._id),
   );
-}
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  const handleAddToCart = () => {
+    if (!isProductInCart) {
+      addToCart({
+        _id: product._id,
+        name: product.name,
+        mainImage: product.images[0],
+        discountedPrice: parseInt(discountedPrice()),
+        quantity: 1,
+      });
+      toast.success("Product added to cart");
+    } else {
+      navigate("/cart");
+    }
+  };  
+  return (
+    <Button
+      onClick={handleAddToCart}
+      className={cn(
+        "px-8",
+        isProductInCart
+          ? "bg-neutral-600 hover:bg-neutral-500"
+          : "bg-amber-600 hover:bg-amber-500",
+      )}
+    >
+      {isProductInCart ? "Go to Cart" : "Add to Cart"}
+    </Button>
+  );
+});
 
 function Product() {
   const { slug, productId } = useParams();
   const { data: product, isLoading } = useSingleProduct(productId);
-  console.log("product rendered");
+
+  // const { data: relatedProducts, error } = useRelatedProduct(
+  //   {
+  //     productId: product?._id,
+  //     categoryIds: product?.categories.map((cat) => cat._id),
+  //     subCategoryIds: product?.subcategories.map((cat) => cat._id),
+  //     colors: product?.colors,
+  //     tags: product?.tags,
+  //   },
+  // );
+
+  // console.log("relatedProducts", relatedProducts);
+  // console.log("error", error);
 
   const discountedPrice = () =>
     (product.price - product.discount).toFixed(2) || product.price;
@@ -56,11 +80,7 @@ function Product() {
     return { firstPart, secondPart };
   }, [product?.longDescription]);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  if (isLoading) return <Spinner />;
+  if (isLoading) return <ProductSkeleton />;
 
   return (
     <Container className={"lg:px-auto md:px-10"}>
@@ -112,10 +132,8 @@ function Product() {
           </div>
 
           <div className="my-3 flex items-center gap-5">
-            <QuantitySelector />
-            <Button className={"w-full px-8 md:w-auto"} variant={"primary"}>
-              Add to Cart
-            </Button>
+            <Button className={"bg-amber-400 px-8"}>Buy Now</Button>
+            <AddToCartButton product={product} discountedPrice={discountedPrice} />
           </div>
 
           <div className="flex flex-col gap-1">

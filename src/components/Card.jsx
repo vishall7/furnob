@@ -8,6 +8,8 @@ import { cn } from "../utils/cn";
 import { useWishList, useWishListMutation } from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useCartStore } from "../store";
+import {CartToast, LikeToast, LoginToast} from "./toasts/Toasts";
 
 export const Stars = ({ stars }) => (
   <div className="flex items-center">
@@ -31,10 +33,13 @@ const cardStyles = cva("flex flex-col gap-3 group/card", {
 });
 
 function Card({ product, size = "md", className }) {
-  const navigate = useNavigate();
-  const [modal, setModal] = useState(false);
+  const addToCart = useCartStore((state) => state.addToCart);
+  const isProductInCart = useCartStore((state) =>
+    state.cart.some((item) => item._id === product._id),
+  );
 
-  const { mutate, error } = useWishListMutation();
+  const navigate = useNavigate();
+  const { mutate } = useWishListMutation();
 
   const { data: wishlist = [] } = useWishList();
 
@@ -49,23 +54,37 @@ function Card({ product, size = "md", className }) {
       {
         onError: (error) => {
           requestAnimationFrame(() =>
-            toast.error(
-              error?.error === "Token expired" ? "Please login" : error?.error,
-              {
-                closeOnClick: true,
-                hideProgressBar: true,
-              },
-            ),
+            toast.error(<LoginToast />),
           );
         },
-      },
+        onSuccess: () => {
+          requestAnimationFrame(() =>
+            toast.success(<LikeToast success={!isLiked} />)
+          );
+        }
+      }
     );
-  };
+  };  
 
   const discountedPrice = () =>
     (product.price - product.discount).toFixed(2) || product.price;
 
   const nameToSlug = (name) => name.split(" ").join("-");
+
+  const handleAddToCart = () => {
+    if (!isProductInCart) {
+      addToCart({
+        _id: product._id,
+        name: product.name,
+        mainImage: product.images[0],
+        discountedPrice: parseInt(discountedPrice()),
+        quantity: 1,
+      });
+      toast.success(<CartToast success />);
+    } else {
+      toast.error(<CartToast />);
+    }
+  };
 
   return (
     <div    
@@ -91,7 +110,6 @@ function Card({ product, size = "md", className }) {
             />
           </span>
           <span
-            onClick={() => setModal(!modal)}
             className="group flex h-9 w-9 translate-x-3 items-center justify-center rounded-full bg-white opacity-0 duration-500 group-hover/card:translate-x-0 group-hover/card:opacity-100"
           >
             <Expand
@@ -108,8 +126,8 @@ function Card({ product, size = "md", className }) {
           className="h-full w-full object-cover cursor-pointer"
         />
         <div
-          onClick={() => setModal(!modal)}
-          className="absolute bottom-0 z-10 w-full translate-y-full bg-white py-3 text-center duration-500 group-hover/card:translate-y-0"
+          className="absolute bottom-0 z-10 w-full translate-y-full bg-white py-3 text-center duration-500 group-hover/card:translate-y-0 cursor-pointer"
+          onClick={handleAddToCart}
         >
           <Text
             as="h3"

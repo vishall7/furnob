@@ -17,11 +17,11 @@ function ProtectedRoute() {
 
   if (!user) {
     sessionStorage.setItem("currentLocation", pathname);
-    return <LoginCheck />;
   }
 
   return (
     <div>
+      {!user && <LoginCheck />}
       <Outlet />
     </div>
   );

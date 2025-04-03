@@ -7,6 +7,9 @@ import ErrorBox from "./components/ErrorBox";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import Spinner from "./components/Spinner";
+import CartDrawer from "./sections/Cart/CartDrawer";
+import {SessionExpiredToast} from "./components/toasts/Toasts";
+import Search from "./components/Search";
 
 function App() { 
   const toastShown = useRef(false);
@@ -28,15 +31,17 @@ function App() {
 
   if (userIsError && userError?.error && !toastShown.current) {
     toastShown.current = true;
-    requestAnimationFrame(() => toast.error(userError.error));
+    requestAnimationFrame(() => toast.error(<SessionExpiredToast />));
   }
 
   return (
     <div className="min-h-screen overflow-x-hidden">
+      <Search />
       <Header />
       <Outlet />
       <Footer />
-      <ToastContainer position="bottom-right" autoClose={3000} />
+      <CartDrawer />
+      <ToastContainer position="bottom-right" autoClose={3000} />      
     </div>
   );
 }

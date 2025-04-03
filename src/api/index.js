@@ -3,7 +3,10 @@ import { queryClient } from "./queryClient";
 import {
   addToWishList,
   fetchCategories,
+  fetchRelatedProducts,
   removeFromWishList,
+  searchProducts,
+  sendOrderEmail,
   signup,
 } from "../axios/requests";
 import { fetchFilters } from "../axios/requests";
@@ -13,7 +16,7 @@ import { fetchWishList } from "../axios/requests";
 import { login } from "../axios/requests";
 import { getCurrentUser } from "../axios/requests";
 import { logout } from "../axios/requests";
-import { fetchSingleProduct } from "../axios/requests"; 
+import { fetchSingleProduct } from "../axios/requests";
 
 const LONG_CACHE_OPTIONS = {
   staleTime: 1000 * 60 * 30,
@@ -23,9 +26,8 @@ const LONG_CACHE_OPTIONS = {
 export const useCategories = (queryOptions = {}) => {
   return useQuery({
     queryKey: ["categories"],
-    queryFn: fetchCategories,    
-    staleTime: 1000 * 60 * 2,
-    gcTime: 1000 * 60 * 2,
+    queryFn: fetchCategories,
+    ...LONG_CACHE_OPTIONS,
     ...queryOptions,
   });
 };
@@ -76,13 +78,24 @@ export const useSingleProduct = (productId, queryOptions = {}) => {
   });
 };
 
+export const useRelatedProduct = (query = {}, queryOptions = {}) => {
+  return useQuery({
+    queryKey: ["relatedProducts", query],
+    queryFn: fetchRelatedProducts,
+    ...LONG_CACHE_OPTIONS,
+    ...queryOptions,
+  });
+};
+
 export const useServerCheckStatus = (queryOptions = {}) => {
+  const serverStatus = queryClient.getQueryData(["serverStatus"]);
   return useQuery({
     queryKey: ["serverStatus"],
     queryFn: serverHealthStatus,
     ...LONG_CACHE_OPTIONS,
     refetchInterval: 1000 * 60 * 10,
     retry: false,
+    refetchOnWindowFocus: !serverStatus,
     ...queryOptions,
   });
 };
@@ -100,12 +113,12 @@ export const useWishList = (queryOptions = {}) => {
 
 export const useWishListMutation = (queryOptions = {}) => {
   return useMutation({
-    mutationFn: ({product, wasInWishlist}) => {  
+    mutationFn: ({ product, wasInWishlist }) => {
       return wasInWishlist
         ? removeFromWishList(product._id)
         : addToWishList(product._id);
     },
-    onMutate: ({product, wasInWishlist}) => {
+    onMutate: ({ product, wasInWishlist }) => {
       queryClient.cancelQueries(["wishList"]);
       const previousWishList = queryClient.getQueryData(["wishList"]) || [];
       queryClient.setQueryData(["wishList"], (oldWishList = []) => {
@@ -164,8 +177,24 @@ export const useGetCurrentUser = (queryOptions = {}) => {
     queryKey: ["currentUser"],
     queryFn: getCurrentUser,
     ...LONG_CACHE_OPTIONS,
-    retry: false,
+    retry: false,    
     enabled: queryOptions?.ifUser ? !!cachedUser : true,
+    ...queryOptions,
+  });
+};
+
+export const useSendOrderEmailMutation = (queryOptions = {}) => {
+  return useMutation({
+    mutationFn: sendOrderEmail,
+    ...queryOptions,
+  });
+}
+
+export const useSearch = (searchQuery = "", queryOptions = {}) => {
+  return useQuery({
+    queryKey: ["search", searchQuery],
+    queryFn: searchProducts,
+    ...LONG_CACHE_OPTIONS,
     ...queryOptions,
   });
 };
